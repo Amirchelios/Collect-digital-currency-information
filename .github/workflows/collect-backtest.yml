@@ -1,0 +1,51 @@
+name: scheduled-backtest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *" # هر روز ساعت 02:00 UTC
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUTF8: "1"
+      PYTHONPATH: "."
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas pandas-ta numpy requests orjson PyQt5 matplotlib
+
+      - name: Run full backtest cycle
+        run: |
+          python "گیتهاب اکشن/run_full_cycle.py" \
+            --root data \
+            --horizon 5 \
+            --calibration-output data/analytics/threshold_suggestions.json \
+            --summary-output data/analytics/backtest_summary.txt
+
+      - name: Upload analytics artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: analytics
+          path: |
+            data/analytics/*.json
+            data/analytics/*.csv
+            data/analytics/*.txt
+          if-no-files-found: warn
+
+      - name: Upload data lake snapshot
+        uses: actions/upload-artifact@v3
+        with:
+          name: data-lake
+          path: data
+          if-no-files-found: warn
