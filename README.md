@@ -13,9 +13,16 @@
 
 - Python 3.10 یا بالاتر  
 - کتابخانه‌های موردنیاز:  
-  ```
-  pip install pandas pandas-ta numpy requests orjson PyQt5 matplotlib
-  ```
+```
+pip install \
+  pandas==2.3.3 \
+  pandas-ta==0.3.14b0 \
+  numpy==2.1.3 \
+  requests==2.32.3 \
+  orjson==3.10.7 \
+  PyQt5==5.15.11 \
+  matplotlib==3.9.2
+```
 
 ## اجرای دستی روی سیستم‌تان
 
